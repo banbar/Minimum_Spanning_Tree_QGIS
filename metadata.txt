@@ -1,0 +1,40 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Minimum Spanning Tree
+qgisMinimumVersion=3.0
+description=This plugin finds the Minimum Spanning Tree of an input polygon shp file using Kruskal's algorithm.
+version=0.1
+author=Abdurrahman Serhan, Berk Anbaroğlu 
+company=Hacettepe University 
+email=samiselim1212@hotmail.com, banbar@hacettepe.edu.tr
+
+about=This plugin finds the Minimum Spanning Tree (MST) of an input polygon shp file using Kruskal's algorithm. First, the centroids of the polygons are determined and those adjacent polygons are connected through an edge. The cost of an edge is the distance between the centroids. Second, Kruskal's algorithm is executed to determine the MST. The centroids, edges and the resulting MST are all added as a virtual layer.
+
+tracker=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
+repository=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=analysis, distance, network, polygon, vector
+
+homepage=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
+category=Vector
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+

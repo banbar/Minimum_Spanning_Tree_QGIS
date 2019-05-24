@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/minimum_spanning_tree" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
