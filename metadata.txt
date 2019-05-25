@@ -17,7 +17,7 @@ email=samiselim1212@hotmail.com, banbar@hacettepe.edu.tr
 
 about=This plugin finds the Minimum Spanning Tree (MST) of an input polygon shp file using Kruskal's algorithm. First, the centroids of the polygons are determined and those adjacent polygons are connected through an edge. The cost of an edge is the distance between the centroids. Second, Kruskal's algorithm is executed to determine the MST. The centroids, edges and the resulting MST are all added as a virtual layer.
 
-tracker=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
+tracker=https://github.com/banbar/Minimum_Spanning_Tree_QGIS/issues
 repository=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
 # End of mandatory metadata
 
