@@ -252,6 +252,7 @@ class MinimumSpanningTree:
 
     # this part of the code it to draw line between centers in shape file
     def draw_line(self):
+        nonsymmetric_list = {}  # this dict. is for incresse the performance of the algo.
         self.all_edge_list = []
         layer = self.activelayer
         epsg = layer.crs().postgisSrid()
@@ -288,40 +289,70 @@ class MinimumSpanningTree:
                     # add the geometry to the feature,
                     # create a new memory layer
                     # create a new feature
-                    seg = QgsFeature()
-                    seg.setGeometry(QgsGeometry.fromPolyline([start, end]))
-                    # add the geometry to the layer
-                    seg.setAttributes([i, feature1.id(), feature.id(),seg.geometry().length()])
-                    pr.addFeatures([seg])
-                    # update extent of the layer (not necessary)
-                    v_layer.updateExtents()
-                    v_layer.updateFeature(seg)
-                    v_layer.commitChanges()
-                    newEdge = [i, [feature1.id(),feature.id()], int(seg.geometry().length())]
-
-                    self.all_edge_list.append(newEdge)
-                    i += 1
+                    if feature.id() not in nonsymmetric_list.keys() :  # v.2 for non symmetric dge list
+                        if feature1.id() not in nonsymmetric_list.keys():
+                            nonsymmetric_list[feature.id()] = [feature1.id()]
+                            seg = QgsFeature()
+                            seg.setGeometry(QgsGeometry.fromPolyline([start, end]))
+                            # add the geometry to the layer
+                            seg.setAttributes([i, feature1.id(), feature.id(),seg.geometry().length()])
+                            pr.addFeatures([seg])
+                            # update extent of the layer (not necessary)
+                            v_layer.updateExtents()
+                            v_layer.updateFeature(seg)
+                            v_layer.commitChanges()
+                            newEdge = [i, [feature1.id(),feature.id()], int(seg.geometry().length())]
+                            self.all_edge_list.append(newEdge)
+                            i += 1
+                        else:  # so the goal is a key in my dict.
+                            if feature.id() not in nonsymmetric_list[feature1.id()]: # so not symmetric.
+                                nonsymmetric_list[feature.id()] = [feature1.id()]
+                                seg = QgsFeature()
+                                seg.setGeometry(QgsGeometry.fromPolyline([start, end]))
+                                # add the geometry to the layer
+                                seg.setAttributes([i, feature1.id(), feature.id(), seg.geometry().length()])
+                                pr.addFeatures([seg])
+                                # update extent of the layer (not necessary)
+                                v_layer.updateExtents()
+                                v_layer.updateFeature(seg)
+                                v_layer.commitChanges()
+                                newEdge = [i, [feature1.id(), feature.id()], int(seg.geometry().length())]
+                                self.all_edge_list.append(newEdge)
+                                i += 1
+                    else:
+                        if feature1.id() not in nonsymmetric_list[feature.id()]:  # so we have new edge for this polygon
+                            nonsymmetric_list[feature.id()].append(feature1.id())
+                            seg = QgsFeature()
+                            seg.setGeometry(QgsGeometry.fromPolyline([start, end]))
+                            # add the geometry to the layer
+                            seg.setAttributes([i, feature1.id(), feature.id(), seg.geometry().length()])
+                            pr.addFeatures([seg])
+                            # update extent of the layer (not necessary)
+                            v_layer.updateExtents()
+                            v_layer.updateFeature(seg)
+                            v_layer.commitChanges()
+                            newEdge = [i, [feature1.id(), feature.id()], float(seg.geometry().length())]
+                            self.all_edge_list.append(newEdge)
+                            i += 1
+                        else:  # so we have the same edge in the key list
+                            continue
         QgsProject.instance().addMapLayer(v_layer)
 
     # find the MST of our edges.
-    def kruskal(self):
+    def kruskal(self, all_points):
         # Initialize the list of vertices
         l_edges = []
-        for polyID in range(len(self.all_points)):
+        for polyID in range(len(all_points)):
             n1 = Node(polyID)
             l_edges.append(n1)
-
         edgesListSorted = sorted(self.all_edge_list, key=lambda l: l[2])
         self.all_edge_list = edgesListSorted
         del edgesListSorted
-
         # MakeSet for each of the vertex
         [MakeSet(node) for node in l_edges]
-
         # Resulting edge list - MST
         self.MST = [[]]
         total_cost = 0
-
         for edges in range(len(self.all_edge_list)):
             # Find the representative set of the edge
             root1 = Find(l_edges[self.all_edge_list[edges][1][0]])
@@ -333,9 +364,8 @@ class MinimumSpanningTree:
                 self.MST.append( [self.all_edge_list[edges][0], self.all_edge_list[edges][1]] )
                 total_cost += self.all_edge_list[edges][2]
                 Union(root1, root2)
-
         self.MST.pop(0)
-        print("Cost: ", total_cost) # show total cost of our MST if needed
+        #print("Cost: ", total_cost) # show total cost of our MST if needed
 
     # this part is for add the center of polygon in our shp file.
     def add_point(self):
@@ -387,13 +417,8 @@ class MinimumSpanningTree:
                     v_layer.updateExtents()
                     v_layer.updateFeature(seg)
                     v_layer.commitChanges()
-
         QgsProject.instance().addMapLayer(v_layer)
-
-
-
-
-
+        
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -401,8 +426,20 @@ class MinimumSpanningTree:
                 self.tr(u'&Minimum Spanning Tree'),
                 action)
             self.iface.removeToolBarIcon(action)
+    
+    def openLayer4change(self):  # id the user is enter the changed shape file.
+        inFile = self.dlg.entryshpfile_2.text()
+        self.iface.addVectorLayer(inFile, str.split(os.path.basename(inFile), ".")[0], "ogr")
+        # give the name of my layer to not loop when ever i need it
+        self.my_layer = str.split(os.path.basename(inFile), ".")[0]
+        self.setUsingLayer(self.my_layer)  # set my layer name.
+        self.setVectorsToEntry(inFile)  # this for show the file path in the edit line in plugin's gui
 
-
+    def Kruskal4Change(self): # create my self.all_edge_list from line layer.
+        self.all_edge_list = []
+        for feature in self.activelayer.getFeatures():
+            # format of self.all_edge_list [id ,[from, to], cost]
+            self.all_edge_list.append([feature[0], [feature[1], feature[2]], feature[3]])
 
     def run(self):
         """Run method that performs all the real work"""
@@ -412,12 +449,16 @@ class MinimumSpanningTree:
         result = self.dlg.exec_()
         # See if OK was pressed
         if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            if self.dlg.entryshpfile.text() != '' and self.inFiles == '':
-                self.inFiles =  self.dlg.entryshpfile.text()
-                self.openShpFile()
-            self.add_point()  # get all the centers of polygons
-            self.draw_line()  # draw lien between then neighbor polygon
-            self.kruskal()    # solve edges to find MST by using Kurskal
-            self.draw_MST()   # draw MST.
+            if self.dlg.entryshpfile_2.text() == '':
+                if self.dlg.entryshpfile.text() != '' and self.inFiles == '':
+                    self.inFiles =  self.dlg.entryshpfile.text()
+                    self.openShpFile()
+                self.add_point()  # get all the centers of polygons
+                self.draw_line()  # draw lien between then neighbor polygon
+                self.kruskal(self.all_points)    # solve edges to find MST by using Kurskal
+                self.draw_MST()   # draw MST.
+            else:  # this part is for make the user make change on the features on line layer and re-calculate the MST
+                self.openLayer4change()  # call 4 open shape file and make some change on it.
+                self.Kruskal4Change()    # call 4 create self.all_edge_list
+                self.kruskal(self.all_edge_list)
+                self.draw_MST()  # draw MST.
