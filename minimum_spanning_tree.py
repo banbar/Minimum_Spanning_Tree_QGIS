@@ -44,7 +44,6 @@ def MakeSet(x):
     x.parent = x
     x.rank = 0
 
-
 def Union(x, y):
     xRoot = Find(x)
     yRoot = Find(y)
@@ -56,18 +55,13 @@ def Union(x, y):
         yRoot.parent = xRoot
         xRoot.rank = xRoot.rank + 1
 
-
 def Find(x):
     if x.parent == x:
         return x
     else:
         x.parent = Find(x.parent)
         return x.parent
-
-
-
-
-
+      
 class MinimumSpanningTree:
     """QGIS Plugin Implementation."""
 
@@ -109,24 +103,19 @@ class MinimumSpanningTree:
 
         self.toolbar = self.iface.addToolBar(u'Minimum Spanning Tree')
         self.toolbar.setObjectName(u'Minimum Spanning Tree')
-
-
+        
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
-
         We implement this ourselves since we do not inherit QObject.
-
         :param message: String for translation.
         :type message: str, QString
-
         :returns: Translated version of message.
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('MinimumSpanningTree', message)
-
-
+       
     def add_action(
         self,
         icon_path,
@@ -176,7 +165,7 @@ class MinimumSpanningTree:
             added to self.actions list.
         :rtype: QAction
         """
-
+      
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -212,7 +201,6 @@ class MinimumSpanningTree:
             parent=self.iface.mainWindow())
 
         self.dlg.open_shpe_files.clicked.connect(self.openShpFile)
-
 
     # this methods will open file browser and load data to QGIS
     def openShpFile(self):  # vectors data
