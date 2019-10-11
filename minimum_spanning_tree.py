@@ -165,7 +165,6 @@ class MinimumSpanningTree:
             added to self.actions list.
         :rtype: QAction
         """
-      
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -185,37 +184,33 @@ class MinimumSpanningTree:
             self.iface.addPluginToVectorMenu(
                 self.menu,
                 action)
-
         self.actions.append(action)
-
         return action
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
-
         icon_path = ':/plugins/minimum_spanning_tree/icon.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Minimum Spanning Tree'),
             callback=self.run,
             parent=self.iface.mainWindow())
-
         self.dlg.open_shpe_files.clicked.connect(self.openShpFile)
-
+        self.dlg.open_shpe_files_2.clicked.connect(self.openLayer4change)
+        
     # this methods will open file browser and load data to QGIS
     def openShpFile(self):  # vectors data
         if self.inFile is not None and self.dlg.entryshpfile.text() == '':  # if our file dose not none
             self.inFile = str(QFileDialog.getOpenFileName(caption="open shapefile"
-                                                          , filter="shapefiles (*.shp)")[0])
-            self.inFiles = self.inFile
-            # we add vector data to my QGIS
-            # self.iface is to connecting our plugin to QGIS and make change on qgis gui
-            self.iface.addVectorLayer(self.inFile, str.split(os.path.basename(self.inFile), ".")[0], "ogr")
-            # give the name of my layer to not loop when ever i need it
-            self.my_layer = str.split(os.path.basename(self.inFile), ".") [0]
-            self.setUsingLayer(self.my_layer)  # set my layer name.
-
-            self.setVectorsToEntry(self.inFile)# this for show the file path in the edit line in plugin's gui
+                                                              , filter="shapefiles (*.shp)")[0])
+            if self.inFile:
+                # we add vector data to my QGIS
+                # self.iface is to connecting our plugin to QGIS and make change on qgis gui
+                self.iface.addVectorLayer(self.inFile, str.split(os.path.basename(self.inFile), ".")[0], "ogr")
+                # give the name of my layer to not loop when ever i need it
+                self.my_layer = str.split(os.path.basename(self.inFile), ".") [0]
+                self.setUsingLayer(self.my_layer)  # set my layer name.
+                self.setVectorsToEntry(self.inFile)# this for show the file path in the edit line in plugin's gui
         elif self.dlg.entryshpfile.text() != '' :
             inFile = self.dlg.entryshpfile.text()
             self.iface.addVectorLayer(inFile, str.split(os.path.basename(inFile), ".")[0], "ogr")
@@ -227,7 +222,10 @@ class MinimumSpanningTree:
     # this function is for show what ever is choose by the user for shp file
     # so the user will see the file path that choose
     def setVectorsToEntry(self, text):
-        self.dlg.entryshpfile.setText(text)
+        if self.inFile4change == '':
+            self.dlg.entryshpfile.setText(text)
+        else:
+            self.dlg.entryshpfile_2.setText(text)
 
     # set my layer to make change on it. to do not loop all vector data more then one time
     def setUsingLayer(self, name):
@@ -416,13 +414,25 @@ class MinimumSpanningTree:
             self.iface.removeToolBarIcon(action)
     
     def openLayer4change(self):  # id the user is enter the changed shape file.
-        inFile = self.dlg.entryshpfile_2.text()
-        self.iface.addVectorLayer(inFile, str.split(os.path.basename(inFile), ".")[0], "ogr")
-        # give the name of my layer to not loop when ever i need it
-        self.my_layer = str.split(os.path.basename(inFile), ".")[0]
-        self.setUsingLayer(self.my_layer)  # set my layer name.
-        self.setVectorsToEntry(inFile)  # this for show the file path in the edit line in plugin's gui
-
+        if self.inFile4change is not None and self.dlg.entryshpfile_2.text() == '':  # if our file dose not none
+            self.inFile4change = str(QFileDialog.getOpenFileName(caption="open shapefile for changed lines"
+                                                          , filter="shapefiles (*.shp)")[0])
+            if self.inFile4change:  # that if user prss cancel so the program will not crash.
+                # we add vector data to my QGIS
+                # self.iface is to connecting our plugin to QGIS and make change on qgis gui
+                self.iface.addVectorLayer(self.inFile4change, str.split(os.path.basename(self.inFile4change), ".")[0], "ogr")
+                # give the name of my layer to not loop when ever i need it
+                self.my_layer = str.split(os.path.basename(self.inFile4change), ".") [0]
+                self.setUsingLayer(self.my_layer)  # set my layer name.
+                self.setVectorsToEntry(self.inFile4change)# this for show the file path in the edit line in plugin's gui
+        elif self.dlg.entryshpfile_2.text() != '' :
+            self.inFile4change = self.dlg.entryshpfile_2.text()
+            self.iface.addVectorLayer(self.inFile4change, str.split(os.path.basename(self.inFile4change), ".")[0], "ogr")
+            # give the name of my layer to not loop when ever i need it
+            self.my_layer = str.split(os.path.basename(self.inFile4change), ".")[0]
+            self.setUsingLayer(self.my_layer)  # set my layer name.
+            self.setVectorsToEntry(self.inFile4change)  # this for show the file path in the edit line in plugin's gui
+            
     def Kruskal4Change(self): # create my self.all_edge_list from line layer.
         self.all_edge_list = []
         for feature in self.activelayer.getFeatures():
