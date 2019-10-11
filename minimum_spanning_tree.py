@@ -68,6 +68,8 @@ class MinimumSpanningTree:
     def __init__(self, iface):
         self.inFile = ''
         self.inFiles = ''
+        self.inFile4change = ''
+
         self.activelayer = "" # set my active layer to null at the
         """Constructor.
         :param iface: An interface instance that will be passed to this class
@@ -195,8 +197,8 @@ class MinimumSpanningTree:
             text=self.tr(u'Minimum Spanning Tree'),
             callback=self.run,
             parent=self.iface.mainWindow())
-        self.dlg.open_shpe_files.clicked.connect(self.openShpFile)
-        self.dlg.open_shpe_files_2.clicked.connect(self.openLayer4change)
+        self.dlg.open_shp_files.clicked.connect(self.openShpFile)
+        self.dlg.open_shp_files_2.clicked.connect(self.openLayer4change)
         
     # this methods will open file browser and load data to QGIS
     def openShpFile(self):  # vectors data
@@ -204,6 +206,7 @@ class MinimumSpanningTree:
             self.inFile = str(QFileDialog.getOpenFileName(caption="open shapefile"
                                                               , filter="shapefiles (*.shp)")[0])
             if self.inFile:
+                self.inFiles = self.inFile
                 # we add vector data to my QGIS
                 # self.iface is to connecting our plugin to QGIS and make change on qgis gui
                 self.iface.addVectorLayer(self.inFile, str.split(os.path.basename(self.inFile), ".")[0], "ogr")
@@ -222,9 +225,9 @@ class MinimumSpanningTree:
     # this function is for show what ever is choose by the user for shp file
     # so the user will see the file path that choose
     def setVectorsToEntry(self, text):
-        if self.inFile4change == '':
+        if self.inFile != '':
             self.dlg.entryshpfile.setText(text)
-        else:
+        elif self.inFile == '':
             self.dlg.entryshpfile_2.setText(text)
 
     # set my layer to make change on it. to do not loop all vector data more then one time
@@ -456,7 +459,6 @@ class MinimumSpanningTree:
                 self.kruskal(self.all_points)    # solve edges to find MST by using Kurskal
                 self.draw_MST()   # draw MST.
             else:  # this part is for make the user make change on the features on line layer and re-calculate the MST
-                self.openLayer4change()  # call 4 open shape file and make some change on it.
                 self.Kruskal4Change()    # call 4 create self.all_edge_list
                 self.kruskal(self.all_edge_list)
                 self.draw_MST()  # draw MST.
