@@ -441,7 +441,53 @@ class MinimumSpanningTree:
         for feature in self.activelayer.getFeatures():
             # format of self.all_edge_list [id ,[from, to], cost]
             self.all_edge_list.append([feature[0], [feature[1], feature[2]], feature[3]])
+    def PluginReloader(self):
+        icon_path = ':/plugins/Test_MST/icon.png'
+        self.Rrloader(
+            icon_path,
+            text=self.tr(u'test_MST'),
+            callback=self.run,
+            parent=self.iface.mainWindow())
 
+        self.dlg.open_shp_files.clicked.connect(self.openShpFile)
+        self.dlg.open_shp_files_2.clicked.connect(self.openLayer4change)
+
+    # this function is for reload our plugin and free up the memory
+    def Rrloader(
+        self,
+        icon_path,
+        text,
+        callback,
+        enabled_flag = True,
+        add_to_menu = False,
+        add_to_toolbar = False,
+        status_tip = None,
+        whats_this = None,
+        parent = None):
+
+        icon = QIcon(icon_path)
+        action = QAction(icon, text, parent)
+        action.triggered.connect(callback)
+        action.setEnabled(enabled_flag)
+
+        if status_tip is not None:
+            action.setStatusTip(status_tip)
+
+        if whats_this is not None:
+            action.setWhatsThis(whats_this)
+
+        if add_to_toolbar:
+        # Adds plugin icon to Plugins toolbar
+            self.iface.addToolBarIcon(action)
+
+        if add_to_menu:
+            self.iface.addPluginToMenu(
+        self.menu,
+        action)
+
+        self.actions.append(action)
+        return action
+          
     def run(self):
         """Run method that performs all the real work"""
         # show the dialog
@@ -450,7 +496,7 @@ class MinimumSpanningTree:
         result = self.dlg.exec_()
         # See if OK was pressed
         if result:
-            if self.dlg.entryshpfile_2.text() == '':
+            if self.dlg.entryshpfile_2.text() == '' and self.inFile4change == '':  # so the user is inter his/her own shape file
                 if self.dlg.entryshpfile.text() != '' and self.inFiles == '':
                     self.inFiles =  self.dlg.entryshpfile.text()
                     self.openShpFile()
@@ -458,7 +504,11 @@ class MinimumSpanningTree:
                 self.draw_line()  # draw lien between then neighbor polygon
                 self.kruskal(self.all_points)    # solve edges to find MST by using Kurskal
                 self.draw_MST()   # draw MST.
+                self.__init__(self.iface)  # clear plugin's GUI
+                self.PluginReloader()  # free up the memory when rerun.
             else:  # this part is for make the user make change on the features on line layer and re-calculate the MST
                 self.Kruskal4Change()    # call 4 create self.all_edge_list
                 self.kruskal(self.all_edge_list)
                 self.draw_MST()  # draw MST.
+                self.__init__(self.iface)
+                self.PluginReloader()   # free up the memory when rerun.
