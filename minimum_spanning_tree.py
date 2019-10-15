@@ -197,38 +197,29 @@ class MinimumSpanningTree:
             text=self.tr(u'Minimum Spanning Tree'),
             callback=self.run,
             parent=self.iface.mainWindow())
-        self.dlg.open_shp_files.clicked.connect(self.openShpFile)
-        self.dlg.open_shp_files_2.clicked.connect(self.openLayer4change)
+        self.dlg.open_shp_files.clicked.connect(self.setVectorsToEntry)
+        self.dlg.open_shp_files_2.clicked.connect(self.setVectorsToEntry4change)
         
     # this methods will open file browser and load data to QGIS
     def openShpFile(self):  # vectors data
-        if self.inFile is not None and self.dlg.entryshpfile.text() == '':  # if our file dose not none
-            self.inFile = str(QFileDialog.getOpenFileName(caption="open shapefile"
-                                                              , filter="shapefiles (*.shp)")[0])
-            if self.inFile:
-                self.inFiles = self.inFile
-                # we add vector data to my QGIS
-                # self.iface is to connecting our plugin to QGIS and make change on qgis gui
-                self.iface.addVectorLayer(self.inFile, str.split(os.path.basename(self.inFile), ".")[0], "ogr")
-                # give the name of my layer to not loop when ever i need it
-                self.my_layer = str.split(os.path.basename(self.inFile), ".") [0]
-                self.setUsingLayer(self.my_layer)  # set my layer name.
-                self.setVectorsToEntry(self.inFile)# this for show the file path in the edit line in plugin's gui
-        elif self.dlg.entryshpfile.text() != '' :
-            inFile = self.dlg.entryshpfile.text()
-            self.iface.addVectorLayer(inFile, str.split(os.path.basename(inFile), ".")[0], "ogr")
-            # give the name of my layer to not loop when ever i need it
-            self.my_layer = str.split(os.path.basename(inFile), ".")[0]
-            self.setUsingLayer(self.my_layer)  # set my layer name.
-            self.setVectorsToEntry(inFile)  # this for show the file path in the edit line in plugin's gui
+        inFile = self.dlg.entryshpfile.text()
+        self.iface.addVectorLayer(inFile, str.split(os.path.basename(inFile), ".")[0], "ogr")
+        # give the name of my layer to not loop when ever i need it
+        self.my_layer = str.split(os.path.basename(inFile), ".")[0]
 
     # this function is for show what ever is choose by the user for shp file
     # so the user will see the file path that choose
-    def setVectorsToEntry(self, text):
-        if self.inFile != '':
-            self.dlg.entryshpfile.setText(text)
-        elif self.inFile == '':
-            self.dlg.entryshpfile_2.setText(text)
+    def setVectorsToEntry(self):
+        self.inFile = str(QFileDialog.getOpenFileName(caption="open shapefile"
+                                                              , filter="shapefiles (*.shp)")[0])
+        if self.inFile:
+            self.dlg.entryshpfile.setText(self.inFile)
+
+    def setVectorsToEntry4change(self):
+        self.inFile4change = str(QFileDialog.getOpenFileName(caption="open shapefile"
+                                                              , filter="shapefiles (*.shp)")[0])
+        if self.inFile4change:
+            self.dlg.entryshpfile_2.setText(self.inFile4change)
 
     # set my layer to make change on it. to do not loop all vector data more then one time
     def setUsingLayer(self, name):
@@ -334,24 +325,24 @@ class MinimumSpanningTree:
         for polyID in range(len(all_points)):
             n1 = Node(polyID)
             l_edges.append(n1)
-        edgesListSorted = sorted(self.all_edge_list, key=lambda l: l[2])
-        self.all_edge_list = edgesListSorted
+        edgesListSorted = sorted(all_points, key=lambda l: l[2])
+        all_points = edgesListSorted
         del edgesListSorted
         # MakeSet for each of the vertex
         [MakeSet(node) for node in l_edges]
         # Resulting edge list - MST
         self.MST = [[]]
         total_cost = 0
-        for edges in range(len(self.all_edge_list)):
+        for edges in range(len(all_points)):
             # Find the representative set of the edge
-            root1 = Find(l_edges[self.all_edge_list[edges][1][0]])
-            root2 = Find(l_edges[self.all_edge_list[edges][1][1]])
+            root1 = Find(l_edges[all_points[edges][1][0]])
+            root2 = Find(l_edges[all_points[edges][1][1]])
             # If both representative nodes are the same, then we form a cycle
             if(root1.data == root2.data):
                 continue
             else:
-                self.MST.append( [self.all_edge_list[edges][0], self.all_edge_list[edges][1]] )
-                total_cost += self.all_edge_list[edges][2]
+                self.MST.append( [all_points[edges][0], all_points[edges][1]] )
+                total_cost += all_points[edges][2]
                 Union(root1, root2)
         self.MST.pop(0)
         #print("Cost: ", total_cost) # show total cost of our MST if needed
@@ -417,30 +408,19 @@ class MinimumSpanningTree:
             self.iface.removeToolBarIcon(action)
     
     def openLayer4change(self):  # id the user is enter the changed shape file.
-        if self.inFile4change is not None and self.dlg.entryshpfile_2.text() == '':  # if our file dose not none
-            self.inFile4change = str(QFileDialog.getOpenFileName(caption="open shapefile for changed lines"
-                                                          , filter="shapefiles (*.shp)")[0])
-            if self.inFile4change:  # that if user prss cancel so the program will not crash.
-                # we add vector data to my QGIS
-                # self.iface is to connecting our plugin to QGIS and make change on qgis gui
-                self.iface.addVectorLayer(self.inFile4change, str.split(os.path.basename(self.inFile4change), ".")[0], "ogr")
-                # give the name of my layer to not loop when ever i need it
-                self.my_layer = str.split(os.path.basename(self.inFile4change), ".") [0]
-                self.setUsingLayer(self.my_layer)  # set my layer name.
-                self.setVectorsToEntry(self.inFile4change)# this for show the file path in the edit line in plugin's gui
-        elif self.dlg.entryshpfile_2.text() != '' :
-            self.inFile4change = self.dlg.entryshpfile_2.text()
-            self.iface.addVectorLayer(self.inFile4change, str.split(os.path.basename(self.inFile4change), ".")[0], "ogr")
-            # give the name of my layer to not loop when ever i need it
-            self.my_layer = str.split(os.path.basename(self.inFile4change), ".")[0]
-            self.setUsingLayer(self.my_layer)  # set my layer name.
-            self.setVectorsToEntry(self.inFile4change)  # this for show the file path in the edit line in plugin's gui
-            
+        self.inFile4change = self.dlg.entryshpfile_2.text()
+        self.iface.addVectorLayer(self.inFile4change, str.split(os.path.basename(self.inFile4change), ".")[0], "ogr")
+        # give the name of my layer to not loop when ever i need it
+        self.my_layer4change = str.split(os.path.basename(self.inFile4change), ".")[0]
+
     def Kruskal4Change(self): # create my self.all_edge_list from line layer.
-        self.all_edge_list = []
+        self.setUsingLayer(self.my_layer4change)  # set my layer name.
+        all_edge_list = []
         for feature in self.activelayer.getFeatures():
             # format of self.all_edge_list [id ,[from, to], cost]
-            self.all_edge_list.append([feature[0], [feature[1], feature[2]], feature[3]])
+            all_edge_list.append([feature[0], [feature[1], feature[2]], feature[3]])
+        return all_edge_list
+
     def PluginReloader(self):
         icon_path = ':/plugins/Test_MST/icon.png'
         self.Rrloader(
@@ -496,19 +476,30 @@ class MinimumSpanningTree:
         result = self.dlg.exec_()
         # See if OK was pressed
         if result:
-            if self.dlg.entryshpfile_2.text() == '' and self.inFile4change == '':  # so the user is inter his/her own shape file
-                if self.dlg.entryshpfile.text() != '' and self.inFiles == '':
-                    self.inFiles =  self.dlg.entryshpfile.text()
-                    self.openShpFile()
+            flag_cost = 0
+            if self.dlg.entryshpfile_2.text() != '' :  # this part is for make the user make change on the features on line layer and re-calculate the MST
+                flag_cost = 1
+                self.openLayer4change()
+
+
+
+            if self.dlg.entryshpfile.text() != '':  # so the user is inter his/her own shape file
+                self.openShpFile()
+                self.setUsingLayer(self.my_layer)  # set my layer name.
+
                 self.add_point()  # get all the centers of polygons
                 self.draw_line()  # draw lien between then neighbor polygon
+
+            if (flag_cost):
+                all_edge_list = self.Kruskal4Change()    # call 4 create self.all_edge_list
+                self.kruskal(all_edge_list)
+                self.draw_MST()  # draw MST.
+            else:
                 self.kruskal(self.all_points)    # solve edges to find MST by using Kurskal
                 self.draw_MST()   # draw MST.
-                self.__init__(self.iface)  # clear plugin's GUI
-                self.PluginReloader()  # free up the memory when rerun.
-            else:  # this part is for make the user make change on the features on line layer and re-calculate the MST
-                self.Kruskal4Change()    # call 4 create self.all_edge_list
-                self.kruskal(self.all_edge_list)
-                self.draw_MST()  # draw MST.
-                self.__init__(self.iface)
-                self.PluginReloader()   # free up the memory when rerun.
+
+        # clear the contents of the GUI
+        self.__init__(self.iface) # clear plugin's GUI
+        self.PluginReloader()   # free up the memory when rerun.
+
+
