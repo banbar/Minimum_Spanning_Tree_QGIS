@@ -371,14 +371,20 @@ class MinimumSpanningTree:
         QgsProject.instance().addMapLayer(mem_layer) # we add the layer to my qgsi and show it
 
 # draw MST by using kruskal
-    def draw_MST(self):
+    def draw_MST(self, layer, flag):
         # comment part is for add the prıject type of new added layer.
         epsg = self.activelayer.crs().postgisSrid()
         # new layer name and the data type of it data and where I would save it. so I save it on y ram
         uri = "LineString?crs=epsg:" + str(epsg) + "&field=id:integer""&index=yes"
-        v_layer = QgsVectorLayer(uri, "MST", "memory")
-        self.setUsingLayer('line')
-        layer = self.activelayer
+        if(flag):
+            mst_name = 'changed_MST'
+        else:
+            mst_name = 'MST'
+        v_layer = QgsVectorLayer(uri, mst_name, "memory")
+        if(flag==0):
+            self.setUsingLayer('line')
+            layer = self.activelayer
+
         pr = v_layer.dataProvider()  # make change on the new layers
         v_layer.startEditing()
         myField = QgsField("id", QVariant.Int, '', 0, 2)
@@ -392,13 +398,17 @@ class MinimumSpanningTree:
                 if feature[0] == edge[0]:  # to not take the same polygon
                     seg = QgsFeature()
                     seg.setGeometry(feature.geometry())
-                    seg.setAttributes([feature.id(), feature.geometry().length()])
+                    if(flag):
+                        seg.setAttributes([feature.id(), feature[3]])
+                    else:
+                        seg.setAttributes([feature.id(), feature.geometry().length()])
                     pr.addFeatures([seg])
                     v_layer.updateExtents()
                     v_layer.updateFeature(seg)
                     v_layer.commitChanges()
         QgsProject.instance().addMapLayer(v_layer)
-        
+
+
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -423,7 +433,7 @@ class MinimumSpanningTree:
 
     def PluginReloader(self):
         icon_path = ':/plugins/minimum_spanning_tree/icon.png'
-        self.add_action(
+        self.Rrloader(
             icon_path,
             text=self.tr(u'Minimum Spanning Tree'),
             callback=self.run,
@@ -467,33 +477,7 @@ class MinimumSpanningTree:
         self.actions.append(action)
         return action
         
-    def draw_MST4Change(self):
-        # comment part is for add the prıject type of new added layer.
-        epsg = self.activelayer.crs().postgisSrid()
-        # new layer name and the data type of it data and where I would save it. so I save it on y ram
-        uri = "LineString?crs=epsg:" + str(epsg) + "&field=id:integer""&index=yes"
-        v_layer = QgsVectorLayer(uri, "changed_MST", "memory")
-        self.setUsingLayer('line')
-        layer = self.activelayer
-        pr = v_layer.dataProvider()  # make change on the new layers
-        v_layer.startEditing()
-        myField = QgsField("id", QVariant.Int, '', 0, 2)
-        dp = v_layer.dataProvider()
-        dp.addAttributes([myField])
-        myField1 = QgsField("cost", QVariant.Int, '', 1, 2)
-        dp = v_layer.dataProvider()
-        dp.addAttributes([myField1])
-        for edge in self.MST:
-            for feature in layer.getFeatures():  # loop our features
-                if feature[0] == edge[0]:  # to not take the same polygon
-                    seg = QgsFeature()
-                    seg.setGeometry(feature.geometry())
-                    seg.setAttributes([feature.id(), feature[3]])
-                    pr.addFeatures([seg])
-                    v_layer.updateExtents()
-                    v_layer.updateFeature(seg)
-                    v_layer.commitChanges()
-        QgsProject.instance().addMapLayer(v_layer)
+
         
     def run(self):
         """Run method that performs all the real work"""
@@ -517,10 +501,10 @@ class MinimumSpanningTree:
             if (flag_cost):
                 all_edge_list = self.Kruskal4Change()    # call 4 create self.all_edge_list
                 self.kruskal(all_edge_list)
-                self.draw_MST4Change()  # draw MST.
             else:
                 self.kruskal(self.all_edge_list)    # solve edges to find MST by using Kurskal
-                self.draw_MST()   # draw MST.
+
+            self.draw_MST(self.activelayer, flag_cost)  # draw MST.
 
         # clear the contents of the GUI
         self.__init__(self.iface) # clear plugin's GUI
