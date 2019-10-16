@@ -73,7 +73,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Path of you shape file:</string>
+    <string>Path of the polygon shapefile:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -91,7 +91,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Enter the edges / line layer (if edges are updated):</string>
+    <string>Path of the polyline shapefile:</string>
    </property>
   </widget>
   <widget class="QToolButton" name="open_shp_files_2">
