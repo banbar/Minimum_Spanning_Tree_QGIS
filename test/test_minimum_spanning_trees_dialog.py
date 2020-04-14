@@ -8,26 +8,26 @@
 
 """
 
-__author__ = 'samiselim1212@hotmail.com, banbar@hacettepe.edu.tr'
-__date__ = '2019-05-24'
-__copyright__ = 'Copyright 2019, Abdurrahman Serhan, Berk Anbaroğlu / Hacettepe University '
+__author__ = 'caliskan.murat.20@gmail.com'
+__date__ = '2019-11-06'
+__copyright__ = 'Copyright 2019, Murat ÇALIŞKAN'
 
 import unittest
 
-from PyQt5.QtGui import QDialogButtonBox, QDialog
+from qgis.PyQt.QtGui import QDialogButtonBox, QDialog
 
-from minimum_spanning_tree_dialog import MinimumSpanningTreeDialog
+from minimum_spanning_trees_dialog import MSTDialog
 
 from utilities import get_qgis_app
 QGIS_APP = get_qgis_app()
 
 
-class MinimumSpanningTreeDialogTest(unittest.TestCase):
+class MSTDialogTest(unittest.TestCase):
     """Test dialog works."""
 
     def setUp(self):
         """Runs before each test."""
-        self.dialog = MinimumSpanningTreeDialog(None)
+        self.dialog = MSTDialog(None)
 
     def tearDown(self):
         """Runs after each test."""
@@ -49,7 +49,7 @@ class MinimumSpanningTreeDialogTest(unittest.TestCase):
         self.assertEqual(result, QDialog.Rejected)
 
 if __name__ == "__main__":
-    suite = unittest.makeSuite(MinimumSpanningTreeDialogTest)
+    suite = unittest.makeSuite(MSTDialogTest)
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
 

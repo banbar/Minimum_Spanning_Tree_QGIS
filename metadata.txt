@@ -1,21 +1,17 @@
-# This file contains metadata for your plugin. Since 
-# version 2.0 of QGIS this is the proper way to supply 
-# information about a plugin. The old method of 
-# embedding metadata in __init__.py will 
-# is no longer supported since version 2.0.
+# This file contains metadata for your plugin.
 
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
 name=Minimum Spanning Tree
 qgisMinimumVersion=3.0
-description=This plugin finds the Minimum Spanning Tree of an input polygon shp file using Kruskal's algorithm.
-version=1.0
-author=Abdurrahman Serhan, Berk Anbaroğlu 
-company=Hacettepe University 
-email=samiselim1212@hotmail.com, banbar@hacettepe.edu.tr
+description=This plugin creates minimum spanning trees in multiple ways.
+version=2.0
+author=Murat Çalışkan, Berk Anbaroğlu
+company=Hacettepe University
+email=caliskan.murat.20@gmail.com, banbar@hacettepe.edu.tr
 
-about=This plugin finds the Minimum Spanning Tree (MST) of an input polygon shp file using Kruskal's algorithm. First, the centroids of the polygons are determined and those adjacent polygons are connected through an edge. The cost of an edge is the distance between the centroids. Second, Kruskal's algorithm is executed to determine the MST. The centroids, edges and the resulting MST are all added as a virtual layer.
+about=This plugin identifies the Minimum Spanning Tree (MST) of geographical inputs. Three different ways to determine costs of edges are considered, which constitute the tabs of the plugin: 1) Vector: Provided by the given input linestring. 2) Automatic: Obtained automatically based on the input shapefile. Delaunay Triangulation is used to obtain the edges, and Euclidean distance is used to determine the costs. 3) Raster: Both raster and vector data are used to estimate the costs of edges. In all of the cost estimation methods, there is an optional barrier (obstacle) input, which makes sure that no edge in MST intersects with a barrier provided as a linestring.  To obtain reliable results, all of the inputs must be in the same coordinate system.
 
 tracker=https://github.com/banbar/Minimum_Spanning_Tree_QGIS/issues
 repository=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
@@ -23,18 +19,30 @@ repository=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
 
 # Recommended items:
 
+hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-#changelog=  
+# changelog=
 
 # Tags are comma separated with spaces allowed
-tags=analysis, distance, network, polygon, vector
+tags=analysis, distance, network, polygon, vector, graph, raster
 
 homepage=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
-category=Vector
+category=Plugins
 icon=icon.png
 # experimental flag
 experimental=True
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
 

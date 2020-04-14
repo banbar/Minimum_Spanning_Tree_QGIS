@@ -1,12 +1,12 @@
 #/***************************************************************************
-# MinimumSpanningTree
+# MST
 #
-# This plugin finds the Minimum Spanning Tree of an input polygon shp file using Kruskal's algorithm.
+# This plugin creates minimum spanning trees in multiple ways.
 #							 -------------------
-#		begin				: 2019-05-24
+#		begin				: 2019-11-06
 #		git sha				: $Format:%H$
-#		copyright			: (C) 2019 by Abdurrahman Serhan, Berk Anbaroğlu / Hacettepe University 
-#		email				: samiselim1212@hotmail.com, banbar@hacettepe.edu.tr
+#		copyright			: (C) 2019 by Murat ÇALIŞKAN
+#		email				: caliskan.murat.20@gmail.com
 # ***************************************************************************/
 #
 #/***************************************************************************
@@ -38,15 +38,15 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	minimum_spanning_tree.py minimum_spanning_tree_dialog.py
+	minimum_spanning_trees.py minimum_spanning_trees_dialog.py
 
-PLUGINNAME = minimum_spanning_tree
+PLUGINNAME = minimum_spanning_trees
 
 PY_FILES = \
 	__init__.py \
-	minimum_spanning_tree.py minimum_spanning_tree_dialog.py
+	minimum_spanning_trees.py minimum_spanning_trees_dialog.py
 
-UI_FILES = minimum_spanning_tree_dialog_base.ui
+UI_FILES = minimum_spanning_trees_dialog_base.ui
 
 EXTRAS = metadata.txt icon.png
 
@@ -65,7 +65,7 @@ PEP8EXCLUDE=pydev,resources.py,conf.py,third_party,ui
 #	* Windows:
 #	  AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins'
 
-QGISDIR=C:\Users\banbar\AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
+QGISDIR=C:\Users\muratcaliskan\AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
 
 #################################################
 # Normally you would not need to edit below here

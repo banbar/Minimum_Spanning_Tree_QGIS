@@ -8,17 +8,17 @@
 
 """
 
-__author__ = 'samiselim1212@hotmail.com, banbar@hacettepe.edu.tr'
-__date__ = '2019-05-24'
-__copyright__ = 'Copyright 2019, Abdurrahman Serhan, Berk Anbaroğlu / Hacettepe University '
+__author__ = 'caliskan.murat.20@gmail.com'
+__date__ = '2019-11-06'
+__copyright__ = 'Copyright 2019, Murat ÇALIŞKAN'
 
 import unittest
 
-from PyQt5.QtGui import QIcon
+from qgis.PyQt.QtGui import QIcon
 
 
 
-class MinimumSpanningTreeDialogTest(unittest.TestCase):
+class MSTDialogTest(unittest.TestCase):
     """Test rerources work."""
 
     def setUp(self):
@@ -31,12 +31,12 @@ class MinimumSpanningTreeDialogTest(unittest.TestCase):
 
     def test_icon_png(self):
         """Test we can click OK."""
-        path = ':/plugins/MinimumSpanningTree/icon.png'
+        path = ':/plugins/MST/icon.png'
         icon = QIcon(path)
         self.assertFalse(icon.isNull())
 
 if __name__ == "__main__":
-    suite = unittest.makeSuite(MinimumSpanningTreeResourcesTest)
+    suite = unittest.makeSuite(MSTResourcesTest)
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
 
