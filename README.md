@@ -14,5 +14,5 @@ The plugin identifies the Minimum Spanning Tree (MST) of geographical inputs. Th
 
 
 <p align="center">
-  <img width="700" src="images/flowchart.jpg">
+  <img width="600" src="images/flowchart.jpg">
 </p>
