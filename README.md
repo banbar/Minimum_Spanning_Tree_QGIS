@@ -3,7 +3,7 @@
 This repository contains the sample data and code of the "Minimum Spanning Tree" plugin of QGIS 3. 
 
 The Graphical User Interface (GUI) of the plugin:
-❮img src="images/gui.jpg" width=300❯
+<img src="images/gui.jpg" width="300">
 
 The plugin identifies the Minimum Spanning Tree (MST) of geographical inputs. Three different ways to determine costs of edges are considered, which constitute the tabs of the plugin: 
 1. Vector: Provided by the given input linestring. 
