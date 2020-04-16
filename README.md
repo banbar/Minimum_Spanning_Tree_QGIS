@@ -1,6 +1,6 @@
 # Minimum Spanning Tree Plugin @ QGIS 3
 
-This repository contains the sample data and code of the "Minimum Spanning Tree" plugin of QGIS 3. The plugin can be downloaded from: https://plugins.qgis.org/plugins/minimum_spanning_tree/
+This repository contains the sample data and code of the 'Minimum Spanning Tree' plugin of QGIS 3.x. The plugin can be downloaded from: https://plugins.qgis.org/plugins/minimum_spanning_tree
 
 <p align="center">
   <img width="350" src="images/gui.jpg">
