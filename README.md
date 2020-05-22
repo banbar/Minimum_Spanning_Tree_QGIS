@@ -16,9 +16,8 @@ The plugin identifies the Minimum Spanning Tree (MST) of geographical inputs. Th
 
 Raster data can be downloaded from: <a href="http://yunus.hacettepe.edu.tr/~banbar/mst_raster.zip" target="_blank">`http://yunus.hacettepe.edu.tr/~banbar/mst_raster.zip`</a>
 
-
-
-
 <p align="center">
   <img width="600" src="images/flowchart.jpg">
 </p>
+
+The OSGeo functionalities used within the plugin are described [here](https://raw.githubusercontent.com/banbar/Minimum_Spanning_Tree_QGIS/431cf56ff2e6bc088d7adceac0c8923f849cfd11/img/code%20diagram_explanations.svg).
