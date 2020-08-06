@@ -4,7 +4,7 @@ This repository contains the sample data and code of the 'Minimum Spanning Tree'
 * The plugin can be downloaded from: <a href="https://plugins.qgis.org/plugins/minimum_spanning_tree" target="_blank">`https://plugins.qgis.org/plugins/minimum_spanning_tree`</a> 
 * Video tutorial: <a href="https://www.youtube.com/watch?v=Tcdvlk_NS8w&feature=youtu.be" target="_blank">`https://www.youtube.com/watch?v=Tcdvlk_NS8w&feature=youtu.be`</a>  
 
-*** Please cite: *** If you are using this plugin for scientific research, please cite the paper <a href=https://www.sciencedirect.com/science/article/pii/S2352711020301771>`<b>Geo-MST: A geographical minimum spanning tree plugin for QGIS</b></a> 
+** Please cite: ** If you are using this plugin for scientific research, please cite the paper <a href=https://www.sciencedirect.com/science/article/pii/S2352711020301771>`<b>Geo-MST: A geographical minimum spanning tree plugin for QGIS</b></a> 
 
 <p align="center">
   <img width="350" src="images/gui.jpg">
