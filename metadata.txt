@@ -6,7 +6,7 @@
 name=Minimum Spanning Tree
 qgisMinimumVersion=3.0
 description=This plugin creates minimum spanning trees in multiple ways.
-version=2.0
+version=2.1
 author=Murat Çalışkan, Berk Anbaroğlu
 company=Hacettepe University
 email=caliskan.murat.20@gmail.com, banbar@hacettepe.edu.tr
@@ -21,7 +21,15 @@ repository=https://github.com/banbar/Minimum_Spanning_Tree_QGIS
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog= 2.1
+    - Input shape files can now start with numbers. 
+  2
+    - Substantial update to the plugin. For reference: https://www.sciencedirect.com/science/article/pii/S2352711020301771
+	- Barriers (obstacles) can be handled.
+	- Raster data could be input to estimate costs of edges.
+	- Delaunay Triangulation was used to determine adjacency of points and areas based on their centroids.
+  1
+    - Initial version. Detects MST based on lines and polygons.
 
 # Tags are comma separated with spaces allowed
 tags=analysis, distance, network, polygon, vector, graph, raster
