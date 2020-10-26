@@ -592,13 +592,13 @@ class MST:
                 layer = shp.GetLayer(0)
                 name = layer.GetName()
                 sr = layer.GetSpatialRef().ExportToProj4()
-                query = "SELECT * FROM {}".format(name)
+                query = """ SELECT * FROM "{}" """.format(name)
                 
                 try:
                     b_shp = ogr.Open(self.dlg.m1_lineEdit_input_2.text())
                     b_layer = b_shp.GetLayer(0)
                     b_name = b_layer.GetName()
-                    b_query = "SELECT * FROM {}".format(b_name)                    
+                    b_query = """ SELECT * FROM "{}" """.format(b_name)                    
                 
                     barrier_line = ogr.Geometry(ogr.wkbMultiLineString)
                     for b in b_shp.ExecuteSQL(b_query):
@@ -634,13 +634,13 @@ class MST:
                 layer = shp.GetLayer(0)
                 name = layer.GetName()
                 sr = layer.GetSpatialRef().ExportToProj4()
-                query = "SELECT * FROM {}".format(name)
+                query = """ SELECT * FROM "{}" """.format(name)
                 
                 try:
                     b_shp = ogr.Open(self.dlg.m2_lineEdit_input_2.text())
                     b_layer = b_shp.GetLayer(0)
                     b_name = b_layer.GetName()
-                    b_query = "SELECT * FROM {}".format(b_name)                    
+                    b_query = """ SELECT * FROM "{}" """.format(b_name)                    
                 
                     barrier_line = ogr.Geometry(ogr.wkbMultiLineString)
                     for b in b_shp.ExecuteSQL(b_query):
@@ -671,13 +671,13 @@ class MST:
                 layer = shp.GetLayer(0)
                 name = layer.GetName()
                 sr = layer.GetSpatialRef().ExportToProj4()
-                query = "SELECT * FROM {}".format(name)
+                query = """ SELECT * FROM "{}" """.format(name)
                 
                 try:
                     b_shp = ogr.Open(self.dlg.m3_lineEdit_input3.text())
                     b_layer = b_shp.GetLayer(0)
                     b_name = b_layer.GetName()
-                    b_query = "SELECT * FROM {}".format(b_name)                    
+                    b_query = """ SELECT * FROM "{}" """.format(b_name)                    
                 
                     barrier_line = ogr.Geometry(ogr.wkbMultiLineString)
                     for bb in b_shp.ExecuteSQL(b_query):
